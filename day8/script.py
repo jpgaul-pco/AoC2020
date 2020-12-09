@@ -24,7 +24,6 @@ def run_until_term_or_loop(ptr=0, acc=0, visited=set()):
 	return ptr >= len(lines), acc
 
 def toggle_instructions(ptr=0, acc=0, visited=set()):
-	terminated = False
 	while ptr not in visited and ptr < len(lines):
 		visited.add(ptr)
 		instr, value = lines[ptr].split()
@@ -32,21 +31,15 @@ def toggle_instructions(ptr=0, acc=0, visited=set()):
 			acc += int(value)
 			ptr += 1
 		elif instr == "jmp":
-			ptr += 1
-			terminated, acc_forecast = run_until_term_or_loop(ptr, acc, visited.copy())
+			terminated, acc_forecast = run_until_term_or_loop(ptr + 1, acc, visited.copy())
 			if terminated:
 				return terminated, acc_forecast
-			else:
-				ptr -= 1
 			
 			ptr += int(value) if int(value) != 0 else len(lines) # terminate if jmp 0
 		else: # nop
-			ptr += int(value) if int(value) != 0 else len(lines)
-			terminated, acc_forecast = run_until_term_or_loop(ptr, acc, visited.copy())
+			terminated, acc_forecast = run_until_term_or_loop(ptr + int(value) if int(value) != 0 else len(lines), acc, visited.copy())
 			if terminated:
 				return terminated, acc_forecast
-			else:
-				ptr -= int(value) if int(value) != 0 else len(lines)
 
 			ptr += 1
 	return terminated, acc
@@ -56,9 +49,9 @@ def main():
 
 	terminated1, loop_acc = run_until_term_or_loop()
 	terminated2, term_acc = toggle_instructions()
-	print(terminated2, term_acc)
 
 	print(f"One loop accumulates {loop_acc}.")
+	print(f"If program terminates, accumulates {term_acc}.")
 
 
 if __name__=="__main__": 
