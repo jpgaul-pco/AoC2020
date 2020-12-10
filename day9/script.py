@@ -33,7 +33,7 @@ def find_target_range_bf(target_number):
 
 # O(n * p)
 def check_pattern():
-	preamble = sorted(lines[:preamble_len])
+	preamble = sorted(lines[:preamble_len]) # O(p log(p))
 
 	for i in range(preamble_len, len(lines)): # O(n)
 		start = 0
@@ -46,18 +46,24 @@ def check_pattern():
 		if start == end:
 			return lines[i]
 		
-		bisect.insort(preamble, lines[i]) # O(log(p))
-		del preamble[bisect.bisect_left(preamble, lines[i - preamble_len])] # O(p)
+		bisect.insort(preamble, lines[i]) # O(log(p)) to find, O(p) to insert
+		del preamble[bisect.bisect_left(preamble, lines[i - preamble_len])] # O(log(p)) to find, O(p) to delete
 
 	return 0
 
 
 def find_target_range(target_number):
-	for i in range(len(lines)):
-		for j in range(len(lines)):
-			if sum(lines[i:j]) == target_number:
-				return lines[i:j]
-	return 0
+	running_sum = lines[0]
+	start = 0
+	end = 1
+	while running_sum != target_number:
+		if running_sum < target_number:
+			running_sum += lines[end]
+			end += 1
+		else:
+			running_sum -= lines[start]
+			start +=1
+	return lines[start:end]
 
 
 def main(): 
