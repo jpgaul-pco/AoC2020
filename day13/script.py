@@ -19,14 +19,12 @@ def find_product():
 
 
 def find_sequence():
-    bus_list = [int(bus) if bus else "" for bus in re.split(",x*", lines[1])]
-    running_tally = 0
-    increment = bus_list[0]
-    for i, bus_num in enumerate(bus_list[1:], 1):
-        if bus_num:
-            while (running_tally + i) % bus_num != 0:
-                running_tally += increment
-            increment *= bus_num
+    bus_list = [int(bus) if bus else 1 for bus in re.split(",x*", lines[1])]
+    running_tally, increment = 0, 1
+    for i, bus_num in enumerate(bus_list):
+        while (running_tally + i) % bus_num != 0:
+            running_tally += increment
+        increment *= bus_num
 
     return running_tally
 
