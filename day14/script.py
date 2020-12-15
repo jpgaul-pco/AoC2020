@@ -34,7 +34,7 @@ def floaty_populate_addresses():
             mask = line[7:]
             mask_set_ones = int("".join(['1' if x == '1' else '0' for x in mask]), 2)
             mask_set_zeroes = int("".join(['0' if x == 'X' else '1' for x in mask]), 2)
-            modifiers = [2 ** (len(mask) - i - 1) for i in range(len(mask)) if mask[i] == 'X']
+            modifiers = [1 << (len(mask) - i - 1) for i in range(len(mask)) if mask[i] == 'X']
             modifier_power_set = []
             for i in range(1 << len(modifiers)):
                 modifier_power_set.append(sum(modifiers[j] for j in range(len(modifiers)) if (i & (1 << j))))
